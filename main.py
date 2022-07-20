@@ -1,3 +1,4 @@
+from crypt import methods
 from flask import Flask, jsonify, request
 
 
@@ -14,7 +15,7 @@ produtos=[
         "preço":90.85 
     }
 ]
-@app.route("/produtos", methods=['GET'])
+@app.route("/produtos/", methods=['GET'])
 def getProdutos():
     return jsonify(produtos)
 
@@ -26,6 +27,11 @@ def getById(cod:int):
 def cadastrar():
     produto = request.get_json()
     produtos.append(produto)
+    return jsonify(produtos)
+@app.route("/produtos/deletar/<int:cod>", methods=["GET","DELETE"])
+def deletar(cod):
+    result = list(filter(lambda x: x["id"]==cod,produtos))[0]
+    produtos.remove(result)
     return jsonify(produtos)
     
 
