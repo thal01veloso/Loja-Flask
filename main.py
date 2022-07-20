@@ -1,8 +1,9 @@
-from crypt import methods
+from flask_pydantic_spec import FlaskPydanticSpec
 from flask import Flask, jsonify, request
 
-
 app = Flask(__name__)
+registro = FlaskPydanticSpec("LojaAPI",title="Loja de Python")
+registro.register(app)
 
 produtos=[
     {
@@ -23,12 +24,12 @@ def getProdutos():
 def getById(cod:int):
     return jsonify(list(filter(lambda x: x["id"]==cod,produtos))[0])
 
-@app.route("/produto/cadastrar",methods=["POST","GET"])
+@app.route("/produto/cadastrar",methods=["POST"])
 def cadastrar():
     produto = request.get_json()
     produtos.append(produto)
     return jsonify(produtos)
-@app.route("/produtos/deletar/<int:cod>", methods=["GET","DELETE"])
+@app.route("/produtos/deletar/<int:cod>", methods=["DELETE"])
 def deletar(cod):
     result = list(filter(lambda x: x["id"]==cod,produtos))[0]
     produtos.remove(result)
